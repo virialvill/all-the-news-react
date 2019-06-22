@@ -1,68 +1,859 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# All the News - React
 
-## Available Scripts
+- [All the News - React](#All-the-News---React)
+  - [1: Create the Header Component](#1-Create-the-Header-Component)
+  - [2: Create the Nav Component](#2-Create-the-Nav-Component)
+  - [3: Create the Stories Component](#3-Create-the-Stories-Component)
+  - [4: Lift State Up to App](#4-Lift-State-Up-to-App)
+  - [5: Categories](#5-Categories)
+  - [6: Fixed Nav](#6-Fixed-Nav)
+  - [6: Active State](#6-Active-State)
 
-In the project directory, you can run:
+## 1: Create the Header Component
 
-### `npm start`
+`components/Header.js`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```js
+import React from 'react';
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+const Header = () => {
+  return (
+    <header>
+      <h1>All the News That Fits We Print!</h1>
+    </header>
+  );
+};
 
-### `npm test`
+export default Header;
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+App.js:
 
-### `npm run build`
+```js
+function App() {
+  return (
+    <>
+      <Header />
+    </>
+  );
+}
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 2: Create the Nav Component
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+App.js:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```js
+import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
 
-### `npm run eject`
+function App() {
+  const navItems = [
+    {
+      label: 'arts',
+      link: '#arts',
+    },
+    {
+      label: 'books',
+      link: '#books',
+    },
+    {
+      label: 'fashion',
+      link: '#fashion',
+    },
+    {
+      label: 'food',
+      link: '#food',
+    },
+    {
+      label: 'movies',
+      link: '#movies',
+    },
+    {
+      label: 'travel',
+      link: '#travel',
+    },
+  ];
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  return (
+    <div className="App">
+      <Header />
+      <Nav navList={navItems} />
+    </div>
+  );
+}
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+export default App;
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Nav.js:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```js
+import React from 'react';
 
-## Learn More
+const Nav = props => {
+  return (
+    <nav>
+      <ul>
+        {props.navList.map(navItem => (
+          <li key={navItem.link}>
+            <a href={navItem.link}>{navItem.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+export default Nav;
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
 
-### Code Splitting
+Externalize the data.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+`components/navItems.js`
 
-### Analyzing the Bundle Size
+```js
+const navItems = [
+  {
+    label: 'arts',
+    link: '#arts',
+  },
+  {
+    label: 'books',
+    link: '#books',
+  },
+  {
+    label: 'fashion',
+    link: '#fashion',
+  },
+  {
+    label: 'food',
+    link: '#food',
+  },
+  {
+    label: 'movies',
+    link: '#movies',
+  },
+  {
+    label: 'travel',
+    link: '#travel',
+  },
+];
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+export default navItems;
+```
 
-### Making a Progressive Web App
+App.js:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+```js
+import React from 'react';
+import navItems from './components/navItems';
+import Header from './components/Header';
+import Nav from './components/Nav';
 
-### Advanced Configuration
+function App() {
+  return (
+    <div className="App">
+      <Header />
+      <Nav navList={navItems} />
+    </div>
+  );
+}
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+export default App;
 
-### Deployment
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+<!-- ## 3: Create the Stories Component
 
-### `npm run build` fails to minify
+https://upmostly.com/tutorials/react-ajax-requests-fetch-data/
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+```js
+import React, { useState, useEffect } from 'react';
+
+const Stories = () => {
+  const [topStories, setStories] = useState([]);
+
+  useEffect(() => {
+    getStories();
+  }, []);
+
+  async function getStories() {
+    const response = await fetch(
+      'https://api.nytimes.com/svc/topstories/v2/arts.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0',
+    );
+    const topStories = await response.json();
+    setStories(topStories.results);
+    console.log(topStories.results);
+  }
+
+  return (
+    <div className="site-wrap">
+      {topStories.map(story => (
+        <div className="entry" key={story.title}>
+          <img
+            src={
+              story.multimedia.length > 0
+                ? story.multimedia[0].url
+                : '/img/no-image.png'
+            }
+            alt="images"
+          />
+          <div>
+            <h3>
+              <a href={story.short_url}>{story.title}</a>
+            </h3>
+            <p>{story.abstract}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Stories;
+
+``` -->
+
+## 3: Create the Stories Component
+
+```js
+import React from 'react';
+
+const nytapi = 'uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0';
+const section = 'arts';
+
+class Stories extends React.Component {
+  state = {
+    stories: [],
+  };
+
+  componentWillMount() {
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${nytapi}`,
+    )
+      .then(response => response.json())
+      .then(data => {
+        let stories = data.results.map(story => {
+          return (
+            <div className="entry" key={story.title}>
+              <img
+                src={
+                  story.multimedia.length > 0
+                    ? story.multimedia[0].url
+                    : '/img/no-image.png'
+                }
+                alt="images"
+              />
+              <div>
+                <h3>
+                  <a href={story.short_url}>{story.title}</a>
+                </h3>
+                <p>{story.abstract}</p>
+              </div>
+            </div>
+          );
+        });
+        this.setState({ stories: stories });
+      });
+  }
+
+  render() {
+    return (
+      <div className="site-wrap">
+        {/* <pre>
+          <code>{JSON.stringify(this.state.stories, null, 2)}</code>
+        </pre> */}
+
+        {this.state.stories}
+      </div>
+    );
+  }
+}
+
+export default Stories;
+
+```
+
+Import it into App.js:
+
+```js
+import React from 'react';
+import navItems from './components/navItems';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+
+function App() {
+  return (
+    <div className="App">
+      <Header />
+      <Nav navList={navItems} />
+      <Stories />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 4: Lift State Up to App
+
+```js
+import React from 'react';
+import navItems from './components/navItems';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+
+class App extends React.Component {
+  state = {
+    navItems: navItems,
+    stories: null,
+    isLoading: true,
+  };
+
+  componentDidMount(section = 'arts') {
+    this.getStories(section);
+  }
+
+  getStories = link => {
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${link}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data, isLoading: false }))
+      .catch(error => console.log(error));
+  };
+
+  render() {
+    const { isLoading } = this.state;
+    return (
+      <>
+        <Header />
+        <Nav navList={navItems} getStories={this.getStories} />
+
+        {!isLoading ? (
+          <Stories stories={this.state.stories} />
+        ) : (
+          <h3>Loading...</h3>
+        )}
+      </>
+    );
+  }
+}
+
+export default App;
+
+```
+
+```js
+import React from 'react';
+
+class Stories extends React.Component {
+  render() {
+    const results = this.props.stories.results;
+    console.log('results ', this.props.stories.results);
+    return (
+      <div className="site-wrap">
+        {results.map(story => (
+          <div className="entry">
+            <img
+              src={
+                story.multimedia[0] === undefined ? '' : story.multimedia[0].url
+              }
+              alt="images"
+            />
+
+            <div>
+              <h3>
+                <a href="{story.short_url}" alt={story.title}>
+                  {story.title}
+                </a>
+              </h3>
+              <p>{story.abstract}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
+export default Stories;
+
+```
+
+NavItem
+
+```js
+import React, { Component } from 'react';
+
+class NavItem extends Component {
+  render() {
+    return (
+      <li>
+        <a href={this.props.link} onClick={this.props.buildStories}>
+          {this.props.label}
+        </a>
+      </li>
+    );
+  }
+}
+export default NavItem;
+```
+
+Nav
+
+```js
+import React from 'react';
+import NavItem from './NavItem';
+
+class Nav extends React.Component {
+  render() {
+    return (
+      <nav>
+        <ul>
+          {this.props.navList.map(navItem =>
+            <NavItem
+              key={navItem.link}
+              link={navItem.link}
+              label={navItem.label}
+              buildStories={this.props.buildStories}
+            />,
+          )}
+        </ul>
+      </nav>
+    );
+  }
+}
+
+export default Nav;
+
+```
+
+## 5: Categories
+
+Nav.js
+
+```js
+import React from 'react';
+import NavItem from './NavItem';
+
+class Nav extends React.Component {
+  render() {
+    return (
+      <nav>
+        <ul>
+          {this.props.navList.map(navItem => (
+            <NavItem
+              key={navItem.link}
+              link={navItem.link}
+              label={navItem.label}
+              getStories={this.props.getStories}
+            />
+          ))}
+        </ul>
+      </nav>
+    );
+  }
+}
+
+export default Nav;
+
+```
+
+NavItem.js
+
+```js
+import React, { Component } from 'react';
+
+class NavItem extends Component {
+  sendSection = () => {
+    this.props.getStories(this.props.label);
+  };
+
+  render() {
+    return (
+      <li>
+        <a href={this.props.link} onClick={this.sendSection}>
+          {this.props.label}
+        </a>
+      </li>
+    );
+  }
+}
+export default NavItem;
+```
+
+App.js
+
+```js
+import React from 'react';
+import navItems from './components/navItems';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+
+class App extends React.Component {
+  state = {
+    navItems: navItems,
+    stories: null,
+  };
+
+  componentDidMount() {
+    this.getStories('arts');
+  }
+
+  getStories = link => {
+    console.log(link);
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${link}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data }));
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <Header />
+        <Nav navList={navItems} getStories={this.getStories} />
+        {this.state.stories ? (
+          <Stories stories={this.state.stories} />
+        ) : (
+          'Loading...'
+        )}
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+Stories
+
+```js
+import React from 'react';
+
+class Stories extends React.Component {
+  render() {
+    const results = this.props.stories.results;
+    console.log('results ', this.props.stories.results);
+    return (
+      <div className="site-wrap">
+        {results.map(story => (
+          <div className="entry">
+            <img
+              src={
+                story.multimedia[0] === undefined ? '' : story.multimedia[0].url
+              }
+              alt="images"
+            />
+
+            <div>
+              <h3>
+                <a href="{story.short_url}" alt={story.title}>
+                  {story.title}
+                </a>
+              </h3>
+              <p>{story.abstract}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
+export default Stories;
+```
+
+## 6: Fixed Nav
+
+```js
+import React from 'react';
+
+import NavItem from './NavItem';
+
+class Nav extends React.Component {
+  render() {
+    return (
+      <nav>
+        <ul>
+          <li className="logo">
+            <a href="#top">
+              <img src="img/logo.svg" alt="logo" />
+            </a>
+          </li>
+          {this.props.navList.map(navItem => (
+            <NavItem
+              key={navItem.link}
+              link={navItem.link}
+              label={navItem.label}
+              getStories={this.props.getStories}
+            />
+          ))}
+        </ul>
+      </nav>
+    );
+  }
+}
+
+export default Nav;
+```
+
+```js
+import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+
+// import './NavItems.js';
+
+const navItemsObject = [
+  {
+    label: 'arts',
+    link: '#arts',
+  },
+  {
+    label: 'books',
+    link: '#books',
+  },
+  {
+    label: 'fashion',
+    link: '#fashion',
+  },
+  {
+    label: 'food',
+    link: '#food',
+  },
+  {
+    label: 'movies',
+    link: '#movies',
+  },
+  {
+    label: 'travel',
+    link: '#travel',
+  },
+];
+
+class App extends React.Component {
+  state = {
+    navItems: navItemsObject,
+    stories: null,
+    isLoading: true,
+  };
+
+  componentDidMount(section = 'arts') {
+    this.getStories(section);
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = () => {
+    if (window.scrollY > document.querySelector('header').offsetHeight) {
+      document.body.style.paddingTop =
+        document.querySelector('nav').offsetHeight + 'px';
+      document.body.classList.add('fixed-nav');
+    } else {
+      document.body.style.paddingTop = 0;
+      document.body.classList.remove('fixed-nav');
+    }
+  };
+
+  getStories = link => {
+    this.setState({ isLoading: true });
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${link}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data, isLoading: false }))
+      .catch(error => this.setState({ error, isLoading: false }));
+  };
+
+  render() {
+    const { isLoading, error } = this.state;
+    return (
+      <div className="App">
+        <Header />
+        <Nav navList={navItemsObject} getStories={this.getStories} />
+        {error ? <p>{error.message}</p> : null}
+        {!isLoading ? (
+          <Stories stories={this.state.stories} />
+        ) : (
+          <h3>Loading...</h3>
+        )}
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+## 6: Active State
+
+activeLink
+
+`activeLink: navItemsObject[0].label,`
+
+`this.setState({ activeLink: link });`
+
+`<Nav ... activeLink={this.state.activeLink}`
+
+
+```js
+import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+
+// import './NavItems.js';
+
+const navItemsObject = [
+  {
+    label: 'arts',
+    link: '#arts',
+  },
+  {
+    label: 'books',
+    link: '#books',
+  },
+  {
+    label: 'fashion',
+    link: '#fashion',
+  },
+  {
+    label: 'food',
+    link: '#food',
+  },
+  {
+    label: 'movies',
+    link: '#movies',
+  },
+  {
+    label: 'travel',
+    link: '#travel',
+  },
+];
+
+class App extends React.Component {
+  state = {
+    navItems: navItemsObject,
+    stories: null,
+    isLoading: true,
+    activeLink: navItemsObject[0].label,
+  };
+
+  componentDidMount(section = 'arts') {
+    this.getStories(section);
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = () => {
+    if (window.scrollY > document.querySelector('header').offsetHeight) {
+      document.body.style.paddingTop =
+        document.querySelector('nav').offsetHeight + 'px';
+      document.body.classList.add('fixed-nav');
+    } else {
+      document.body.style.paddingTop = 0;
+      document.body.classList.remove('fixed-nav');
+    }
+  };
+
+  getStories = link => {
+    this.setState({ activeLink: link });
+    this.setState({ isLoading: true });
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${link}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data, isLoading: false }))
+      .catch(error => console.log(error));
+  };
+
+  render() {
+    const { isLoading } = this.state;
+    return (
+      <div className="App">
+        <Header />
+        <Nav
+          navList={navItemsObject}
+          getStories={this.getStories}
+          activeLink={this.state.activeLink}
+        />
+        {!isLoading ? (
+          <Stories stories={this.state.stories} />
+        ) : (
+          <h3>Loading...</h3>
+        )}
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+Nav.js
+
+```js
+import React from 'react';
+
+import NavItem from './NavItem';
+
+class Nav extends React.Component {
+  render() {
+    return (
+      <nav>
+        <ul>
+          <li className="logo">
+            <a href="#top">
+              <img src="img/logo.svg" alt="logo" />
+            </a>
+          </li>
+          {this.props.navList.map(navItem => (
+            <NavItem
+              key={navItem.link}
+              link={navItem.link}
+              label={navItem.label}
+              getStories={this.props.getStories}
+              activeLink={this.props.activeLink}
+            />
+          ))}
+        </ul>
+      </nav>
+    );
+  }
+}
+
+export default Nav;
+
+```
+
+```css
+nav a {
+  text-decoration: none;
+  display: inline-block;
+  color: white;
+  text-transform: capitalize;
+  font-weight: 700;
+  min-height: 2.5rem;
+  line-height: 2.5rem;
+}
+```
