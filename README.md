@@ -12,6 +12,10 @@
   - [Fixed Nav](#Fixed-Nav)
   - [Active State](#Active-State)
 
+We will retrofit the single page app developed in session one to use React.
+
+The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently.
+
 Install the required modules using `npm install` and `npm start` the application.
 
 Examine the application structure.
