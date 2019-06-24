@@ -1,22 +1,22 @@
 # All the News - React
 
 - [All the News - React](#All-the-News---React)
-  - [1: Create the Header Component](#1-Create-the-Header-Component)
-  - [2: Create the Nav Component](#2-Create-the-Nav-Component)
+  - [Create the Header Component](#Create-the-Header-Component)
+  - [Create the Nav Component](#Create-the-Nav-Component)
   - [Importing and Exporting](#Importing-and-Exporting)
-  - [3: Create the Stories Component](#3-Create-the-Stories-Component)
+  - [Create the Stories Component](#Create-the-Stories-Component)
   - [Demo: State](#Demo-State)
-  - [4: Lift State Up to App](#4-Lift-State-Up-to-App)
-  - [The Story COmponent](#The-Story-COmponent)
+  - [Lift State Up to App](#Lift-State-Up-to-App)
+  - [The Story Component](#The-Story-Component)
   - [Multiple Sections](#Multiple-Sections)
-  - [6: Fixed Nav](#6-Fixed-Nav)
-  - [6: Active State](#6-Active-State)
+  - [Fixed Nav](#Fixed-Nav)
+  - [Active State](#Active-State)
 
 Install the required modules using `npm install` and `npm start` the application.
 
 Examine the application structure.
 
-## 1: Create the Header Component
+## Create the Header Component
 
 `components/Header.js`
 
@@ -67,7 +67,7 @@ const Header = (props) => {
 export default Header;
 ```
 
-## 2: Create the Nav Component
+## Create the Nav Component
 
 Nav.js:
 
@@ -261,7 +261,7 @@ export default Nav;
 
 Note the use of a template string above to add the hash.
 
-## 3: Create the Stories Component
+## Create the Stories Component
 
 Create the stories component with a single category to start.
 
@@ -345,7 +345,7 @@ export default Stories;
 
 But that would eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a much better idea to keep this functionality at the top level of our application.
 
-## 4: Lift State Up to App
+## Lift State Up to App
 
 Roll back Stories.js to:
 
@@ -473,7 +473,7 @@ export default App;
 
 Note `componentWillMount(section = 'arts')` - a default variable.
 
-## The Story COmponent
+## The Story Component
 
 Rather than rendering everything in the stories component we pass that duty off to a small chunk - a component called Story (singluar).
 
@@ -712,7 +712,7 @@ The click event now communicates with the getStories function in App.js.
 
 Test it in the browser.
 
-## 6: Fixed Nav
+## Fixed Nav
 
 In the original project the navbar became fixed to the top of the screen when the header was scrolled off.
 
@@ -821,7 +821,7 @@ const Nav = props => {
 };
 ```
 
-## 6: Active State
+## Active State
 
 It would be nice to have an idicator of which section we are viewing. Let's add a highlighted nav item for this purpose.
 
@@ -999,6 +999,4 @@ nav a {
 nav a:hover {
   background-color: #00aeef;
 }
-
-
 ```
