@@ -3,11 +3,18 @@
 - [All the News - React](#All-the-News---React)
   - [1: Create the Header Component](#1-Create-the-Header-Component)
   - [2: Create the Nav Component](#2-Create-the-Nav-Component)
+  - [Importing and Exporting](#Importing-and-Exporting)
   - [3: Create the Stories Component](#3-Create-the-Stories-Component)
+  - [Demo: State](#Demo-State)
   - [4: Lift State Up to App](#4-Lift-State-Up-to-App)
+  - [The Story COmponent](#The-Story-COmponent)
   - [Multiple Sections](#Multiple-Sections)
   - [6: Fixed Nav](#6-Fixed-Nav)
   - [6: Active State](#6-Active-State)
+
+Install the required modules using `npm install` and `npm start` the application.
+
+Examine the application structure.
 
 ## 1: Create the Header Component
 
@@ -36,12 +43,28 @@ import Header from './components/Header';
 function App() {
   return (
     <>
-      <Header />
+      <Header siteTitle="All the News that Fits We Print" />
     </>
   );
 }
 
 export default App;
+```
+
+Use the prop in Header.js:
+
+```js
+import React from 'react';
+
+const Header = (props) => {
+  return (
+    <header>
+      <h1>{props.siteTitle}</h1>
+    </header>
+  );
+};
+
+export default Header;
 ```
 
 ## 2: Create the Nav Component
@@ -55,9 +78,7 @@ const Nav = props => {
   return (
     <nav>
       <ul>
-        {props.navItems.map(index => (
-          <p>{index}</p>
-        ))}
+        <li>Nav component</li>
       </ul>
     </nav>
   );
@@ -66,54 +87,26 @@ const Nav = props => {
 export default Nav;
 ```
 
-Note the error: "Each child in a list should have a unique "key" prop."
+Import and compose it:
 
 ```js
 import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
 
-const Nav = props => {
+function App() {
   return (
-    <nav>
-      <ul>
-        {props.navItems.map(index => (
-          <p key={index}>{index}</p>
-        ))}
-      </ul>
-    </nav>
+    <>
+      <Header siteTitle="All the News that Fits We Print" />
+      <Nav />
+    </>
   );
-};
+}
 
-export default Nav;
-
+export default App;
 ```
 
-Nav.js - rendering content:
-
-```js
-import React from 'react';
-
-const Nav = props => {
-  return (
-    <nav>
-      <ul>
-        {props.navItems.map((navItem, index) => (
-          <li key={index}>
-            <a href={navItem.link}>{navItem.label}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-};
-
-export default Nav;
-```
-
-Note that when calling `.map` we do not use curly `{ ... }` but rounded braces `( ... )`. 
-
-The right hand side of the arrow function needs to be an expression. An expression is any valid unit of code that resolves to a value.
-
-App.js:
+In App.js add our navList from the vanilla JS version and send it, via props, to the Nav component:
 
 ```js
 import React from 'react';
@@ -147,21 +140,70 @@ function App() {
       link: '#travel',
     },
   ];
-
   return (
     <>
-      <Header />
+      <Header siteTitle="All the News that Fits We Print" />
       <Nav navItems={navItems} />
     </>
   );
 }
 
 export default App;
+
 ```
+
+Now we can build out the nav items using props:
+
+```js
+import React from 'react';
+
+const Nav = props => {
+  return (
+    <nav>
+      <ul>
+        {props.navItems.map(navItem => (
+          <a href={navItem.link}>{navItem.label}</a>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+export default Nav;
+```
+
+Note the error: "Each child in a list should have a unique "key" prop."
+
+```js
+import React from 'react';
+
+const Nav = props => {
+  return (
+    <nav>
+      <ul>
+        {props.navItems.map(navItem => (
+          <li key={navItem.label}>
+            <a href={navItem.link}>{navItem.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+export default Nav;
+
+```
+
+Note that when calling `.map` we do not use curly `{ ... }` but rounded braces `( ... )`. 
+
+The right hand side of the arrow function needs to be an expression. 
+
+## Importing and Exporting
 
 Externalize the data.
 
-`components/navItems.js`
+Create `components/navItems.js` (note the lower case - this is not a React component).
 
 ```js
 const navItems = ['arts', 'books', 'fashion', 'food', 'movies', 'travel'];
@@ -170,7 +212,9 @@ export default navItems;
 
 ```
 
-App.js:
+We are now using a simple array. Since the links and labels are almost identical we have simplified things a bit here.
+
+Remove it from App.js and import the external file:
 
 ```js
 import React from 'react';
@@ -181,7 +225,7 @@ import navItems from './components/navItems';
 function App() {
   return (
     <>
-      <Header />
+      <Header siteTitle="All the News that Fits We Print" />
       <Nav navItems={navItems} />
     </>
   );
@@ -189,6 +233,8 @@ function App() {
 
 export default App;
 ```
+
+Note that the data is not in the format expected by Nav.js.
 
 Nav.js
 
@@ -213,13 +259,52 @@ export default Nav;
 
 ```
 
-Note the use of a template string.
+Note the use of a template string above to add the hash.
 
 ## 3: Create the Stories Component
 
 Create the stories component with a single category to start.
 
-Stories.js
+`components/Stories.js`:
+
+```js
+import React from 'react';
+
+class Stories extends React.Component {
+  render() {
+    return <div className="site-wrap">Stories</div>;
+  }
+}
+
+export default Stories;
+```
+
+And import / compose it in App.js:
+
+```js
+import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+import navItems from './components/navItems';
+
+function App() {
+  return (
+    <>
+      <Header siteTitle="All the News that Fits We Print" />
+      <Nav navItems={navItems} />
+      <Stories />
+    </>
+  );
+}
+
+export default App;
+
+```
+
+## Demo: State 
+
+We could proceed to add the fetching capability in this component as follows:
 
 ```js
 import React from 'react';
@@ -258,28 +343,7 @@ export default Stories;
 
 ```
 
-Import it into App.js:
-
-```js
-import React from 'react';
-import Header from './components/Header';
-import Nav from './components/Nav';
-import navItems from './components/navItems';
-import Stories from './components/Stories';
-
-function App() {
-  return (
-    <>
-      <Header />
-      <Nav navItems={navItems} />
-      <Stories />
-    </>
-  );
-}
-
-export default App;
-
-```
+But that would eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a much better idea to keep this functionality at the top level of our application.
 
 ## 4: Lift State Up to App
 
@@ -303,7 +367,7 @@ class Stories extends React.Component {
 export default Stories;
 ```
 
-Note: `this.props.stories`
+Note: `this.props.stories`. 
 
 Since we want to store data in App.js we need to use a class component.
 
@@ -313,14 +377,14 @@ App.js:
 import React from 'react';
 import Header from './components/Header';
 import Nav from './components/Nav';
-import navItems from './components/navItems';
 import Stories from './components/Stories';
+import navItems from './components/navItems';
 
 class App extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header siteTitle="All the News that Fits We Print" />
         <Nav navItems={navItems} />
         <Stories />
       </>
@@ -332,7 +396,40 @@ export default App;
 
 ```
 
-Note that we've imported and composed Stories as well.
+We begin by creating state in App.js:
+
+```js
+import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Stories from './components/Stories';
+import navItems from './components/navItems';
+
+class App extends React.Component {
+  state = {
+    navItems: navItems,
+    stories: [],
+    isLoading: true,
+  };
+  render() {
+    return (
+      <>
+        <Header siteTitle="All the News that Fits We Print" />
+        <Nav navItems={this.state.navItems} />
+        <Stories />
+      </>
+    );
+  }
+}
+
+export default App;
+```
+
+We instantiate stories as an empty array and create a bit of state to track whether the data is loading. 
+
+Note that the Nav component is now being sent state: `<Nav navItems={this.state.navItems} />`.
+
+Now we use a component lifecycle event to fetch the data and pass it to the Stories component as a prop.
 
 App.js:
 
@@ -340,8 +437,8 @@ App.js:
 import React from 'react';
 import Header from './components/Header';
 import Nav from './components/Nav';
-import navItems from './components/navItems';
 import Stories from './components/Stories';
+import navItems from './components/navItems';
 
 class App extends React.Component {
   state = {
@@ -361,13 +458,9 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Header />
-        <Nav navItems={navItems} />
-        {this.state.isLoading ? (
-          'Loading...'
-        ) : (
-          <Stories stories={this.state.stories} />
-        )}
+        <Header siteTitle="All the News that Fits We Print" />
+        <Nav navItems={this.state.navItems} />
+        <Stories stories={this.state.stories} />
       </>
     );
   }
@@ -379,6 +472,10 @@ export default App;
 ```
 
 Note `componentWillMount(section = 'arts')` - a default variable.
+
+## The Story COmponent
+
+Rather than rendering everything in the stories component we pass that duty off to a small chunk - a component called Story (singluar).
 
 Create Story.js:
 
@@ -397,22 +494,25 @@ export default Story;
 
 ```
 
-Render them from Stories with a key set to the story's index:
+We will render multiple stoy components from Stories with a key set to the story's index.
+
+Stories.js:
 
 ```js
 import React from 'react';
 import Story from './Story';
 
-const Stories = props => {
-  console.log(props);
-  return (
-    <div className="site-wrap">
-      {props.stories.map((story, index) => (
-        <Story key={index} story={story} />
-      ))}
-    </div>
-  );
-};
+class Stories extends React.Component {
+  render() {
+    return (
+      <div className="site-wrap">
+        {this.props.stories.map((story, index) => (
+          <Story key={index} story={story} />
+        ))}
+      </div>
+    );
+  }
+}
 
 export default Stories;
 
@@ -475,7 +575,7 @@ export default Story;
 
 ## Multiple Sections 
 
-Currently our app only render the arts section. We need to code the navbar tabs to communicate with App in order to fetch other sections.
+Currently our app only renders the arts section. We need to code the navbar tabs to communicate with App in order to fetch other sections.
 
 In App.js, restructure the lifecycle to separate out the fetch action into its own function:
 
@@ -495,11 +595,35 @@ In App.js, restructure the lifecycle to separate out the fetch action into its o
   };
 ```
 
-Pass getStories into the Nav:
+We switch the isLoading piece of state to true while the fetch operation is under way and set it to false once the operation has completed.
+
+isLoading will be set to false by default in the initial declaration and is toggled to true at the beginning of the fatch operation. When the data is ready we set it to false. 
+
+We can now use this piece of state in the return as follows:
+
+```js
+render() {
+    return (
+      <>
+        <Header siteTitle="All the News that Fits We Print" />
+        <Nav navItems={this.state.navItems} />
+        {this.state.isLoading ? (
+          'Loading...'
+        ) : (
+          <Stories stories={this.state.stories} />
+        )}
+      </>
+    );
+  }
+```
+
+It may be difficult to see the effect unless we slow down the loading in the Network tab of the developer tools.
+
+Pass getStories into the Nav in App.js:
 
 `<Nav navItems={navItems} getStories={this.getStories} />`
 
-NavItem
+Create NavItem.js
 
 ```js
 import React from 'react';
@@ -562,7 +686,7 @@ export default Nav;
 
 ```
 
-Once in NavItems we will create a local function:
+Once in NavItems we will create a local function sendSection on attach it to the link using onClick:
 
 ```js
 import React from 'react';
@@ -584,26 +708,48 @@ export default NavItem;
 
 ```
 
+The click event now communicates with the getStories function in App.js. 
+
+Test it in the browser.
+
 ## 6: Fixed Nav
+
+In the original project the navbar became fixed to the top of the screen when the header was scrolled off.
+
+We can perfom the same effect by editing App.js
+
+```js
+  componentWillMount(section = 'arts') {
+    this.getStories(section);
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  getStories = section => {
+    this.setState({ isLoading: true });
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data.results, isLoading: false }))
+      .catch(error => console.log(error));
+  };
+```
+
+E.g.:
 
 ```js
 import React from 'react';
 import Header from './components/Header';
 import Nav from './components/Nav';
-import navItems from './components/navItems';
 import Stories from './components/Stories';
+import navItems from './components/navItems';
 
 class App extends React.Component {
   state = {
     navItems: navItems,
     stories: [],
-    isLoading: true,
+    isLoading: false,
   };
-
-  componentWillMount(section = 'arts') {
-    this.getStories(section);
-    window.addEventListener('scroll', this.handleScroll);
-  }
 
   handleScroll = () => {
     if (window.scrollY > document.querySelector('header').offsetHeight) {
@@ -615,6 +761,11 @@ class App extends React.Component {
       document.body.classList.remove('fixed-nav');
     }
   };
+
+  componentWillMount(section = 'arts') {
+    this.getStories(section);
+    window.addEventListener('scroll', this.handleScroll);
+  }
 
   getStories = section => {
     this.setState({ isLoading: true });
@@ -629,7 +780,7 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header siteTitle="All the News that Fits We Print" />
         <Nav navItems={navItems} getStories={this.getStories} />
         {this.state.isLoading ? (
           'Loading...'
@@ -642,17 +793,69 @@ class App extends React.Component {
 }
 
 export default App;
+
+```
+
+The log can be added to Nav.js:
+
+```js
+const Nav = props => {
+  return (
+    <nav>
+      <ul>
+        <li className="logo">
+          <a href="#top">
+            <img src="img/logo.svg" alt="logo" />
+          </a>
+        </li>
+        {props.navItems.map((navItem, index) => (
+          <NavItem
+            key={index}
+            navItem={navItem}
+            getStories={props.getStories}
+          />
+        ))}
+      </ul>
+    </nav>
+  );
+};
 ```
 
 ## 6: Active State
 
-activeLink
+It would be nice to have an idicator of which section we are viewing. Let's add a highlighted nav item for this purpose.
 
-In state:
+Initialize the application with a new peice of state - `activeLink` in App.js:
 
-`activeLink: navItems[0].label,`
+`activeLink: navItems[0],`
 
-`this.setState({ activeLink: link });`
+```js
+  state = {
+    navItems: navItems,
+    stories: [],
+    isLoading: false,
+    activeLink: navItems[0],
+  };
+```
+
+We can use the section variable to set the activeLink property when we run getStories:
+
+`this.setState({ activeLink: section });`
+
+```js
+  getStories = section => {
+    this.setState({ isLoading: true });
+    this.setState({ activeLink: section });
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data.results, isLoading: false }))
+      .catch(error => console.log(error));
+  }
+```
+
+And then send the activeLink as a property to the Nav component:
 
 `<Nav ... activeLink={this.state.activeLink}`
 
@@ -722,7 +925,7 @@ export default App;
 
 ```
 
-Nav.js
+Forward to from Nav.js to NavItem:
 
 ```js
 import React from 'react';
@@ -754,7 +957,7 @@ export default Nav;
 
 ```
 
-NavItem.js:
+Finally use a ternary NavItem.js to toggle the class name:
 
 ```js
 import React from 'react';
@@ -763,7 +966,6 @@ const NavItem = props => {
   const sendSection = () => {
     props.getStories(props.navItem);
   };
-
   return (
     <li className={props.activeLink === props.navItem ? 'active' : ''}>
       <a href={`#${props.navItem}`} onClick={sendSection}>
@@ -775,6 +977,8 @@ const NavItem = props => {
 export default NavItem;
 
 ```
+
+Since we didn't have this feature in the original project we need to add a bit of css:
 
 ```css
 nav li.active {
@@ -789,6 +993,12 @@ nav a {
   font-weight: 700;
   min-height: 2.5rem;
   line-height: 2.5rem;
+  width: 100%;
 }
+
+nav a:hover {
+  background-color: #00aeef;
+}
+
 
 ```
