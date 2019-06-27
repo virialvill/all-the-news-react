@@ -15,13 +15,15 @@
 
 We will retrofit the single page app developed in session one to use React.
 
-The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently.
+The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently.vInstead of scrolling to different sections, it will load new data when the user navigates.
 
 Install the required modules using `npm install` and `npm start` the application.
 
 Examine the application structure.
 
 ## Create the Header Component
+
+Begin by creating a simple functional component in the components folder:
 
 `components/Header.js`
 
