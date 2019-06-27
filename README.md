@@ -12,12 +12,15 @@
   - [Multiple Sections](#Multiple-Sections)
   - [Fixed Nav](#Fixed-Nav)
   - [Active State](#Active-State)
+  - [Notes](#Notes)
 
-We will retrofit the single page app developed in session one to use React.
+In the first session we created a [single page app](http://oit2.scps.nyu.edu/~devereld/intermediate/session1/) using vanilla js. In this class we will retrofit it to use React.
 
-The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently.vInstead of scrolling to different sections, it will load new data when the user navigates.
+The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently. Instead of scrolling to different sections, it will load new data when the user navigates.
 
-Install the required modules using `npm install` and `npm start` the application.
+The vanilla js version of this project is available [here](https://github.com/front-end-summer19/all-the-news-vanillajs).
+
+`cd` into this repo, install the required modules using `$ npm install` and `$ npm start` the application.
 
 Examine the application structure.
 
@@ -171,7 +174,9 @@ const Nav = props => {
     <nav>
       <ul>
         {props.navItems.map(navItem => (
-          <a href={navItem.link}>{navItem.label}</a>
+          <li>
+            <a href={navItem.link}>{navItem.label}</a>
+          </li>
         ))}
       </ul>
     </nav>
@@ -274,7 +279,7 @@ There are two ways of exporting in JavaScript: default and named.
 
 `export { navItems };` is a named export and would be imported using `import { navItems } from './components/navItems';`
 
-You will often see people using named inports when creating React components:
+You will often see people using named imports when creating React components:
 
 ```js
 import React, { Component } from 'react';
@@ -321,7 +326,7 @@ export default Stories;
 
 ```
 
-Note the ternary expression - if `props.stories` exists then output the JSON, otherwise output the string Stories.
+Note the ternary expression - if `props.stories` exists then output the [JSON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify), otherwise output the string Stories.
 
 And import / compose it in App.js:
 
@@ -354,6 +359,7 @@ We could proceed to add the fetching capability in this component as follows:
 import React from 'react';
 
 class Stories extends React.Component {
+
   state = {
     stories: [],
   };
@@ -381,7 +387,9 @@ export default Stories;
 
 ```
 
-But that would eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a much better idea to keep this functionality at the top level of our application.
+React’s ES6 class components have [lifecycle methods](https://reactjs.org/docs/react-component.html). When the `componentDidMount()` method runs, the component will have already been rendered once with the render() method, but it will render again when the fetched data is stored in the local state of the component with `setState()`. `setState()` always forces React to re-render just those portions of the DOM which need updating.
+
+But locating this in the stories component will eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a better idea to keep this functionality at the top level of our application.
 
 ## State in App
 
@@ -1024,4 +1032,76 @@ nav a {
 nav a:hover {
   background-color: #00aeef;
 }
+```
+
+## Notes
+
+The Stories component is not strictly necessary. We can import Story and compose it instead.
+
+```js
+import React from 'react';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Story from './components/Story';
+import { navItems } from './components/navItems';
+
+class App extends React.Component {
+  state = {
+    navItems: navItems,
+    stories: [],
+    isLoading: false,
+    activeLink: navItems[0],
+  };
+
+  componentWillMount(section = 'arts') {
+    this.getStories(section);
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = () => {
+    if (window.scrollY > document.querySelector('header').offsetHeight) {
+      document.body.style.paddingTop =
+        document.querySelector('nav').offsetHeight + 'px';
+      document.body.classList.add('fixed-nav');
+    } else {
+      document.body.style.paddingTop = 0;
+      document.body.classList.remove('fixed-nav');
+    }
+  };
+
+  getStories = section => {
+    this.setState({ isLoading: true });
+    this.setState({ activeLink: section });
+    fetch(
+      `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
+    )
+      .then(response => response.json())
+      .then(data => this.setState({ stories: data.results, isLoading: false }))
+      .catch(error => console.log(error));
+  };
+
+  render() {
+    return (
+      <>
+        <Header siteTitle="All the News that Fits We Print" />
+        <Nav
+          navItems={navItems}
+          getStories={this.getStories}
+          activeLink={this.state.activeLink}
+        />
+        {this.state.isLoading ? (
+          'Loading...'
+        ) : (
+          <div className="site-wrap">
+            {this.state.stories.map((story, index) => (
+              <Story key={index} story={story} />
+            ))}
+          </div>
+        )}
+      </>
+    );
+  }
+}
+export default App;
+
 ```
