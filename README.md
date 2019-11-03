@@ -1,21 +1,22 @@
 # All the News - React
 
-- [All the News - React](#All-the-News---React)
-  - [Reading](#Reading)
-  - [Homework](#Homework)
-  - [Exercise](#Exercise)
-  - [Create the Header Component](#Create-the-Header-Component)
-  - [The Nav Component](#The-Nav-Component)
-  - [Importing and Exporting](#Importing-and-Exporting)
-    - [Named vs Default Exports](#Named-vs-Default-Exports)
-  - [The Stories Component](#The-Stories-Component)
-  - [Demo: State](#Demo-State)
-  - [State in App](#State-in-App)
-  - [The Story Component](#The-Story-Component)
-  - [Multiple Sections](#Multiple-Sections)
-  - [Fixed Nav](#Fixed-Nav)
-  - [Active State](#Active-State)
-  - [Notes](#Notes)
+- [All the News - React](#all-the-news---react)
+  - [Reading](#reading)
+  - [Homework](#homework)
+  - [Exercise](#exercise)
+  - [Create the Header Component](#create-the-header-component)
+  - [The Nav Component](#the-nav-component)
+- [fall2019-start here](#fall2019-start-here)
+  - [Importing and Exporting](#importing-and-exporting)
+    - [Named vs Default Exports](#named-vs-default-exports)
+  - [The Stories Component](#the-stories-component)
+  - [Demo: State](#demo-state)
+  - [State in App](#state-in-app)
+  - [The Story Component](#the-story-component)
+  - [Multiple Sections](#multiple-sections)
+  - [Fixed Nav](#fixed-nav)
+  - [Active State](#active-state)
+  - [Notes](#notes)
 
 ## Reading
 
@@ -254,6 +255,8 @@ const Nav = props => {
 
 export default Nav;
 ```
+
+# fall2019-start here
 
 Note the error: "Each child in a list should have a unique "key" prop."
 
