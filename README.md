@@ -447,7 +447,7 @@ class Stories extends React.Component {
     stories: [],
   };
 
-  componentWDidMount() {
+  componentDidMount() {
     fetch(
       `https://api.nytimes.com/svc/topstories/v2/arts.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
     )
@@ -734,7 +734,9 @@ Again, the Loading functionality is not strictly required for the app to work an
 
 Pass getStories into the Nav in App.js:
 
-`<Nav navItems={navItems} getStories={this.getStories} />`
+```js
+<Nav navItems={navItems} getStories={this.getStories} />
+```
 
 Create NavItem.js
 
