@@ -349,7 +349,18 @@ Note the use of a template string above to add the hash.
 
 There are two ways of exporting in JavaScript: default and named.
 
-`export { navItems };` is a named export and would be imported using `import { navItems } from './components/navItems';`
+```js
+export const navItems = [
+  'arts',
+  'books',
+  'fashion',
+  'food',
+  'movies',
+  'travel',
+];
+```
+
+`navItems` above is a named export and would be imported using `import { navItems } from './components/navItems';`
 
 You will often see people using named imports when creating React components:
 
@@ -436,7 +447,7 @@ class Stories extends React.Component {
     stories: [],
   };
 
-  componentWillMount() {
+  componentWDidMount() {
     fetch(
       `https://api.nytimes.com/svc/topstories/v2/arts.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`,
     )
