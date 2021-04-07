@@ -67,13 +67,15 @@ And displays this [SVG file](https://codepen.io/aurer/pen/jEGbA) while loading i
 
 ## Exercise
 
-In the first session we created a [single page app](http://oit2.scps.nyu.edu/~devereld/intermediate/session1/) using vanilla js. In this class we will retrofit it to use React.
+## Exercise
+
+In the first session we created a [single page app](http://oit2.scps.nyu.edu/~devereld/intermediate/session1/) using vanilla js. In this class we will use React.
 
 The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently. Instead of scrolling to different sections, it will load new data when the user navigates.
 
 `cd` into this repo, install the required modules using `$ npm install` and `$ npm start` the application.
 
-Examine the application structure.
+Examine the application structure. To minimize the number of imports, the CSS and images are in the public folder.
 
 ## Create the Header Component
 
