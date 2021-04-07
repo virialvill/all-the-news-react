@@ -100,10 +100,10 @@ Begin by creating a simple functional component in the components folder:
 ```js
 import React from "react";
 
-const Header = () => {
+const Header = (props) => {
   return (
     <header>
-      <h1>Header Component</h1>
+      <h1>{props.siteTitle}</h1>
     </header>
   );
 };
@@ -126,22 +126,6 @@ function App() {
 }
 
 export default App;
-```
-
-Use the prop in Header.js:
-
-```js
-import React from "react";
-
-const Header = (props) => {
-  return (
-    <header>
-      <h1>{props.siteTitle}</h1>
-    </header>
-  );
-};
-
-export default Header;
 ```
 
 ## The Nav Component
@@ -353,24 +337,22 @@ export const navItems = [
 
 `navItems` above is a named export and would be imported using `import { navItems } from './components/navItems';`
 
-You will often see people using named imports when creating React components:
+You will often see people using named imports when working with React components:
 
 ```js
-import React, { Component } from 'react';
-
-class Stories extends Component {
-  ...
-}
+import React, { useState } from 'react';
+...
+const [data, setData] = useState([])
+...
 ```
 
 Instead of:
 
 ```js
 import React from 'react';
-
-class Stories extends React.Component {
-  ...
-}
+...
+const [data, setData] = React.useState([])
+...
 ```
 
 ## The Stories Component
@@ -430,36 +412,34 @@ We could proceed to add the fetching capability in this component as follows:
 ```js
 import React from "react";
 
-class Stories extends React.Component {
-  state = {
-    stories: [],
-  };
+const stories = () => {
+  const [stories, setStories] = React.useState([]);
 
-  componentDidMount() {
+  React.useState(() => {
     fetch(
       `https://api.nytimes.com/svc/topstories/v2/arts.json?api-key=uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0`
     )
       .then((response) => response.json())
       .then((data) => this.setState({ stories: data }));
-  }
+  });
 
-  render() {
-    return (
-      <div className="site-wrap">
-        <pre>
-          <code>{JSON.stringify(this.state.stories.results, null, 2)}</code>
-        </pre>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="site-wrap">
+      <pre>
+        <code>{JSON.stringify(this.state.stories.results, null, 2)}</code>
+      </pre>
+    </div>
+  );
+};
 
 export default Stories;
 ```
 
-React’s ES6 class components have [lifecycle methods](https://reactjs.org/docs/react-component.html). When the `componentDidMount()` method runs, the component will have already been rendered once with the render() method, but it will render again when the fetched data is stored in the local state of the component with `setState()`. `setState()` always forces React to re-render just those portions of the DOM which need updating.
+## UseState
 
-But locating this in the stories component will eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a better idea to keep this functionality at the top level of our application.
+<!-- React’s ES6 class components have [lifecycle methods](https://reactjs.org/docs/react-component.html). When the `componentDidMount()` method runs, the component will have already been rendered once with the render() method, but it will render again when the fetched data is stored in the local state of the component with `setState()`. `setState()` always forces React to re-render just those portions of the DOM which need updating.
+
+But locating this in the stories component will eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a better idea to keep this functionality at the top level of our application. -->
 
 ## State in App
 
@@ -472,19 +452,18 @@ import React from "react";
 import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Stories from "./components/Stories";
+
 import navItems from "./components/navItems";
 
-class App extends React.Component {
-  render() {
-    return (
-      <>
-        <Header siteTitle="All the News that Fits We Print" />
-        <Nav navItems={navItems} />
-        <Stories />
-      </>
-    );
-  }
-}
+const App = () => {
+  return (
+    <>
+      <Header siteTitle="All the News that Fits We Print" />
+      <Nav navItems={navItems} />
+      <Stories />
+    </>
+  );
+};
 
 export default App;
 ```
