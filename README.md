@@ -453,9 +453,7 @@ const Story = (props) => {
       />
       <div>
         <h3>
-          <a href={props.story.short_url} alt={props.story.title}>
-            {props.story.title}
-          </a>
+          <a href={props.story.short_url}>{props.story.title}</a>
         </h3>
         <p>{props.story.abstract}</p>
       </div>
@@ -714,27 +712,20 @@ React.useEffect(() => {
   )
     .then((response) => response.json())
     .then((data) => setStories(data.results))
-    .then(setLoading(false));
+    .then(setLoading(false))
+    .catch((error) => {
+      console.log(error);
+    });
 }, [section]);
 ```
 
 Note we've added `section` to the previously empty array. The array allows you to determine when the effect will run. THe empty array caused the effect to run once after the component rendered. When we add a piece of state or a prop to the array the effect will run whenever that state or prop changes.
 
+`.catch` has also been added at the end of the promise chain to log any errors that might occur.
+
 Test it in the browser.
 
-## Fixed Nav
-
-In the original project the navbar became fixed to the top of the screen when the header was scrolled off.
-
-```css
-nav {
-  background: #007eb6;
-  width: 100%;
-  transition: all 0.5s;
-  position: sticky;
-  top: 0;
-}
-```
+## Touch Ups
 
 Add the logo list item to Nav.js:
 
@@ -766,8 +757,6 @@ const Nav = (props) => {
 export default Nav;
 ```
 
-## Header
-
 We'll also add a header to the top of the article list.
 
 In App.js:
@@ -798,15 +787,17 @@ export default Stories;
 
 ## Active State
 
-Add a visual indicator of which section we are viewing to the navbar. Let's add a highlight to the appropriate nav item for this purpose.
+Add a highlight to the current nav item to indicate the section we are viewing.
 
-We can use the section variable to set the activeLink property:
+We can use the section state to set the activeLink property.
+
+In App.js:
 
 ```js
 <Nav navItems={navItems} setSection={setSection} section={section} />
 ```
 
-And then send the property to the NavItem component:
+And then forward the property to the NavItem component:
 
 ```js
 import React from "react";
@@ -895,11 +886,12 @@ nav a:not(.active):hover {
 
 ## Styled Components
 
-Examine the New York Times website in the dev tool's element panel.
+Examine:
 
-An app this simple hardly requires them, we will use [Styled Components](https://styled-components.com/).
+- the New York Times website in the dev tool's elements panel.
+- the Sign Up button on [Good Reads](https://www.goodreads.com/).
 
-Examine the Sign Up button on [Good Reads](https://www.goodreads.com/).
+We will use [Styled Components](https://styled-components.com/) to refactor our CSS.
 
 `$ npm i styled-components`
 
@@ -940,9 +932,7 @@ const Story = (props) => {
       />
       <div>
         <h3>
-          <a href={props.story.short_url} alt={props.story.title}>
-            {props.story.title}
-          </a>
+          <a href={props.story.short_url}>{props.story.title}</a>
         </h3>
         <p>{props.story.abstract}</p>
       </div>
@@ -988,7 +978,7 @@ const StoryPara = styled.p`
 
 const Story = (props) => {
   return (
-    <Wrapper href={props.story.short_url} alt={props.story.title}>
+    <Wrapper href={props.story.short_url}>
       <Entry>
         <StoryImg
           src={
