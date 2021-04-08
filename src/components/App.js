@@ -5,14 +5,17 @@ import Stories from "./stories";
 import Loader from "./loader";
 
 import "./app.css";
+import { getExpirationDate, getCookie } from "../utils/utils";
 
 const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 const nytapi = "IBOst14SeT5OXhGNk8ZQOPhVBhj9ED0h";
 
+const cookieVal = getCookie("section");
+
 function App() {
   const [stories, setStories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [section, setSection] = React.useState("arts");
+  const [section, setSection] = React.useState(cookieVal || "arts");
 
   React.useEffect(() => {
     setLoading(true);
@@ -25,6 +28,12 @@ function App() {
       .catch((error) => {
         console.log(error);
       });
+  }, [section]);
+
+  React.useEffect(() => {
+    document.cookie = `section=${section}; expires=${getExpirationDate(
+      1000 * 60 * 60 * 24 * 7
+    )}`;
   }, [section]);
 
   return (
