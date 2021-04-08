@@ -153,49 +153,20 @@ function App() {
 export default App;
 ```
 
-In App.js add our nav items from the vanilla JS version and send it, via props, to the Nav component:
-
-<!-- <<<<< HUH??? >>>>> -->
-
-Create a data folder in src and within create a file `navItems.js`:
+In App.js add our nav items:
 
 ```js
-export const navItems = [
-  {
-    label: "arts",
-    link: "#arts",
-  },
-  {
-    label: "books",
-    link: "#books",
-  },
-  {
-    label: "fashion",
-    link: "#fashion",
-  },
-  {
-    label: "food",
-    link: "#food",
-  },
-  {
-    label: "movies",
-    link: "#movies",
-  },
-  {
-    label: "travel",
-    link: "#travel",
-  },
-];
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 ```
 
-Note the lower case - this is not a React component.
+And send them, via props, to the Nav component:
 
 ```js
 import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 
-import { navItems } from "./data/navItems";
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 
 function App() {
   return (
@@ -209,74 +180,9 @@ function App() {
 export default App;
 ```
 
-NOte: navItems is a named export.
-
 Use the React developer tool to inspect the Nav component and ensure the navItems props exists.
 
 Now we can build out the nav items using props:
-
-```js
-import React from "react";
-
-const Nav = (props) => {
-  return (
-    <nav>
-      <ul>
-        {props.navItems.map((navItem) => (
-          <li>
-            <a href={navItem.link}>{navItem.label}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-};
-
-export default Nav;
-```
-
-Note the error: "Each child in a list should have a unique "key" prop."
-
-```js
-import React from "react";
-
-const Nav = (props) => {
-  return (
-    <nav>
-      <ul>
-        {props.navItems.map((navItem) => (
-          <li key={navItem.label}>
-            <a href={navItem.link}>{navItem.label}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-};
-
-export default Nav;
-```
-
-Note that when calling `.map` we are not using curly `{ ... }` but rounded braces `( ... )`. We are using an implicit return.
-
-## Importing and Exporting
-
-```js
-export const navItems = [
-  "arts",
-  "books",
-  "fashion",
-  "food",
-  "movies",
-  "travel",
-];
-```
-
-We are now using a simple array. Since the links and labels are almost identical we have simplified things a bit here.
-
-Note that our app just broke because the data is not in the format expected by Nav.js.
-
-Edit Nav.js:
 
 ```js
 import React from "react";
@@ -300,46 +206,11 @@ export default Nav;
 
 Note the use of a template string above to add the hash.
 
-### Named vs Default Exports
-
-There are two ways of exporting in JavaScript: default and named.
-
-```js
-export const navItems = [
-  "arts",
-  "books",
-  "fashion",
-  "food",
-  "movies",
-  "travel",
-];
-```
-
-`navItems` above is a named export and would be imported using `import { navItems } from './components/navItems';`
-
-You will often see people using named imports when working with React components:
-
-```js
-import React, { useState } from 'react';
-...
-const [data, setData] = useState([])
-...
-```
-
-Instead of:
-
-```js
-import React from 'react';
-...
-const [data, setData] = React.useState([])
-...
-```
+Note that when calling `.map` we are not using curly `{ ... }` but rounded braces `( ... )`. We are using an implicit return.
 
 ## The Stories Component
 
-Create the stories component with a single category to start.
-
-`components/Stories.js`:
+Create a Stories component:.
 
 ```js
 import React from "react";
@@ -347,13 +218,9 @@ import React from "react";
 const Stories = (props) => {
   return (
     <div className="site-wrap">
-      {props.stories ? (
-        <pre>
-          <code>{JSON.stringify(props.stories, null, 2)}</code>
-        </pre>
-      ) : (
-        "Stories"
-      )}
+      <pre>
+        <code>{JSON.stringify(props.stories, null, 2)}</code>
+      </pre>
     </div>
   );
 };
@@ -361,7 +228,7 @@ const Stories = (props) => {
 export default Stories;
 ```
 
-Note the ternary expression - if `props.stories` exists then output the [JSON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify), otherwise output the string Stories.
+`JSON.stringify(props.stories, null, 2)` will take our stories data and display it. We've added `<pre>` and `<code>` tags to make it readable. This is a very common technique used when you prefer to examine the data in the UI instead of the console.
 
 And import / compose it in App.js:
 
@@ -370,7 +237,8 @@ import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 import Stories from "./Stories";
-import { navItems } from "./data/navItems";
+
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 
 function App() {
   return (
@@ -387,7 +255,7 @@ export default App;
 
 ## Demo: State
 
-We could proceed to add the fetching capability in this component as follows:
+We could add the fetching capability in the Stories component as follows:
 
 ```js
 import React from "react";
@@ -417,24 +285,23 @@ const Stories = () => {
 export default Stories;
 ```
 
-## UseState
+But recall from the previous sessions, it is usually better to locate your data at the highest level of the React tree.
 
-<!-- React’s ES6 class components have [lifecycle methods](https://reactjs.org/docs/react-component.html). When the `componentDidMount()` method runs, the component will have already been rendered once with the render() method, but it will render again when the fetched data is stored in the local state of the component with `setState()`. `setState()` always forces React to re-render just those portions of the DOM which need updating.
-
-But locating this in the stories component will eventually lead to issues. When we hook up our navbar it will need to access a fetching mechanism in order to bring the new content into the app. THerefore it is a better idea to keep this functionality at the top level of our application. -->
+<!-- END DEMO -->
 
 ## State in App
 
-We want to store data in App.js.
+We want to store the stories data in App.js.
 
-We begin by creating state in App.js:
+Let's begin by creating two pieces of state in App.js:
 
 ```js
 import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 import Stories from "./Stories";
-import { navItems } from "./data/navItems";
+
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 
 function App() {
   const [stories, setStories] = React.useState([]);
@@ -452,9 +319,9 @@ function App() {
 export default App;
 ```
 
-We instantiate stories as an empty array and a bit of state to track whether the data is loading.
+We initialize stories as an empty array and add a bit of state to track whether the data is loading.
 
-Now we use the `useEffect` to fetch the data and then we pass it to the Stories component as a prop.
+Now we add variables for the api key and default section and use the `useEffect` hook to fetch the data and then we pass it to the Stories component as a prop. We also pass the stories state to the Stories component.
 
 App.js:
 
@@ -463,8 +330,8 @@ import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 import Stories from "./Stories";
-import { navItems } from "./data/navItems";
 
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 const nytapi = "IBOst14SeT5OXhGNk8ZQOPhVBhj9ED0h";
 const section = "arts";
 
@@ -492,9 +359,19 @@ function App() {
 export default App;
 ```
 
+## useEffect
+
+The Effect Hook lets you perform side effects in function components. By using this Hook, you tell React that your component needs to do something after it renders. By default, it runs both after the first render and after every update but we'll be customizing it to run only when the section (arts,,, music etc.) changes. For now, we are only using one section - arts.
+
+```js
+React.useEffect(callbackFunction, []);
+```
+
+Note the empty array that is the second argument in useEffect. An empty array causes the effect to run once after the component renders and again when the component unmounts or just before it is removed. `[]` tells React that your effect doesn’t depend on any values from props or state, so it never needs to re-run.
+
 ## The Story Component
 
-Rather than rendering everything in the stories component we pass that duty off to a component called Story (singluar).
+Rather than rendering everything in the stories component we'll pass that duty off to a component called Story (singluar).
 
 Create Story.js:
 
@@ -511,8 +388,6 @@ const Story = (props) => {
 
 export default Story;
 ```
-
-Note: this div takes a class of entry so we can use the CSS from the non-react version of this project.
 
 We will render multiple story components from Stories.js with a key set to the story's index.
 
@@ -535,7 +410,7 @@ const Stories = (props) => {
 export default Stories;
 ```
 
-Now, in Story.js, begin building out the content following the structure of the html in the non React version of this project.\
+Now, in Story.js, begin building out the content.
 
 First the images:
 
@@ -548,7 +423,7 @@ const Story = (props) => {
       <img
         src={
           props.story.multimedia
-            ? props.story.multimedia[0].url
+            ? props.story.multimedia[1].url
             : "/img/no-image.png"
         }
         alt="images"
@@ -571,7 +446,7 @@ const Story = (props) => {
       <img
         src={
           props.story.multimedia
-            ? props.story.multimedia[0].url
+            ? props.story.multimedia[1].url
             : "/img/no-image.png"
         }
         alt="images"
@@ -595,61 +470,21 @@ export default Story;
 
 Currently our app only renders the arts section. We need to code the navbar tabs to communicate with App in order to call fetch for additional sections.
 
-In App.js, restructure the lifecycle to separate out the fetch action into its own function:
-
-```js
-import React from "react";
-import Header from "./Header";
-import Nav from "./Nav";
-import Stories from "./Stories";
-import { navItems } from "./data/navItems";
-
-const nytapi = "IBOst14SeT5OXhGNk8ZQOPhVBhj9ED0h";
-const section = "arts";
-
-function App() {
-  const [stories, setStories] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    getStories();
-  }, []);
-
-  const getStories = () => {
-    fetch(
-      `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${nytapi}`
-    )
-      .then((response) => response.json())
-      .then((data) => setStories(data.results));
-  };
-
-  return (
-    <>
-      <Header siteTitle="All the News that Fits We Print" />
-      <Nav navItems={navItems} />
-      <Stories stories={stories} />
-    </>
-  );
-}
-
-export default App;
-```
+But first, it is important that we allow that data to be fetched before we try to render the rest of the application.
 
 Let's switch the isLoading piece of state to true while the fetch operation is under way and set it to false once the operation has completed.
 
-Set isLoading to false by default in the initial declaration:
+Set isLoading to false by default in the initial declaration, then set it to true before the fetch operation, and finally set it back to false afterwards.
 
-```js
-const [loading, setLoading] = React.useState(false);
-```
+We'll also add an if statment that shows "Loading" while the data is loading.
 
 ```js
 import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 import Stories from "./Stories";
-import { navItems } from "./data/navItems";
 
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 const nytapi = "IBOst14SeT5OXhGNk8ZQOPhVBhj9ED0h";
 const section = "arts";
 
@@ -658,18 +493,14 @@ function App() {
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    getStories();
-  }, []);
-
-  const getStories = () => {
     setLoading(true);
     fetch(
       `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${nytapi}`
     )
       .then((response) => response.json())
       .then((data) => setStories(data.results))
-      .then(setLoading(true));
-  };
+      .then(setLoading(false));
+  }, []);
 
   if (loading) {
     return <h2>Loading...</h2>;
@@ -687,27 +518,25 @@ function App() {
 export default App;
 ```
 
-We can now use this piece of state in the return as follows:
+If you leave the loading state as true after the fetch you should see the message.
+
+We are currently hiding everything on load. Let's only hide the content area:
 
 ```js
 import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 import Stories from "./Stories";
-import { navItems } from "./data/navItems";
 
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 const nytapi = "IBOst14SeT5OXhGNk8ZQOPhVBhj9ED0h";
 const section = "arts";
 
 function App() {
   const [stories, setStories] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    getStories();
-  }, []);
-
-  const getStories = () => {
     setLoading(true);
     fetch(
       `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${nytapi}`
@@ -715,7 +544,7 @@ function App() {
       .then((response) => response.json())
       .then((data) => setStories(data.results))
       .then(setLoading(true));
-  };
+  }, []);
 
   // if (loading) {
   //   return <h2>Loading...</h2>;
@@ -725,14 +554,11 @@ function App() {
     <>
       <Header siteTitle="All the News that Fits We Print" />
       <Nav navItems={navItems} />
-
       {loading || stories.length === 0 ? (
-        "Loading..."
+        <h2>Loading...</h2>
       ) : (
         <Stories stories={stories} />
       )}
-
-      {/* <Stories stories={stories} /> */}
     </>
   );
 }
@@ -740,17 +566,22 @@ function App() {
 export default App;
 ```
 
-We can also see the effect by slowing down the loading in the Network tab of the developer tools.
+(We can also see the effect by slowing down the loading in the Network tab of the developer tools.)
+
+Next we'll create a piece of state for the sections:
+
+```js
+const [section, setSection] = React.useState("arts");
+```
 
 ```js
 import React from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 import Stories from "./Stories";
-import { navItems } from "./data/navItems";
 
+const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
 const nytapi = "IBOst14SeT5OXhGNk8ZQOPhVBhj9ED0h";
-// const section = "arts";
 
 function App() {
   const [stories, setStories] = React.useState([]);
@@ -765,13 +596,12 @@ function App() {
       .then((response) => response.json())
       .then((data) => setStories(data.results))
       .then(setLoading(false));
-  }, [section]);
+  }, []);
 
   return (
     <>
       <Header siteTitle="All the News that Fits We Print" />
-      <Nav navItems={navItems} setSection={setSection} />
-
+      <Nav navItems={navItems} />
       {loading || stories.length === 0 ? (
         <h2>Loading...</h2>
       ) : (
@@ -784,13 +614,15 @@ function App() {
 export default App;
 ```
 
-Pass setSection into the Nav in App.js:
+Since clicking on the nav is what changes the section we'll pass `setSection` into the Nav in App.js:
 
 ```js
 <Nav navItems={navItems} setSection={setSection} />
 ```
 
-Create NavItem.js
+We'll use a new component in Nav to display each of the nav elements.
+
+Create NavItem.js:
 
 ```js
 import React from "react";
@@ -872,7 +704,21 @@ const NavItem = (props) => {
 export default NavItem;
 ```
 
-The click event now communicates with the setSection function in App.js.
+The click event now communicates with the setSection function in App.js however our useState hook needs to run again when the section changes:
+
+```js
+React.useEffect(() => {
+  setLoading(true);
+  fetch(
+    `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${nytapi}`
+  )
+    .then((response) => response.json())
+    .then((data) => setStories(data.results))
+    .then(setLoading(false));
+}, [section]);
+```
+
+Note we've added `section` to the previously empty array. The array allows you to determine when the effect will run. THe empty array caused the effect to run once after the component rendered. When we add a piece of state or a prop to the array the effect will run whenever that state or prop changes.
 
 Test it in the browser.
 
@@ -922,13 +768,15 @@ export default Nav;
 
 ## Header
 
-App.js:
+We'll also add a header to the top of the article list.
+
+In App.js:
 
 ```js
 <Stories stories={stories} section={section} />
 ```
 
-Storeis.js:
+In Stories.js:
 
 ```js
 import React from "react";
@@ -950,7 +798,7 @@ export default Stories;
 
 ## Active State
 
-It would be nice to have a visual indicator of which section we are viewing. Let's add a highlight to the appropriate nav item for this purpose.
+Add a visual indicator of which section we are viewing to the navbar. Let's add a highlight to the appropriate nav item for this purpose.
 
 We can use the section variable to set the activeLink property:
 
@@ -1014,7 +862,7 @@ const NavItem = (props) => {
 export default NavItem;
 ```
 
-Since we didn't have this feature in the original project we need to add/edit a bit of css in the public folder:
+Note the supporting CSS for this in the public folder:
 
 ```css
 nav ul {
@@ -1043,6 +891,250 @@ nav a:not(.active):hover {
   border-radius: 6px;
   background-color: #00aeef;
 }
+```
+
+## Styled Components
+
+Examine the New York Times website in the dev tool's element panel.
+
+An app this simple hardly requires them, we will use [Styled Components](https://styled-components.com/).
+
+Examine the Sign Up button on [Good Reads](https://www.goodreads.com/).
+
+`$ npm i styled-components`
+
+We'll start on the lower level components and work our way up beginning with the Story component.
+
+```js
+import React from "react";
+import styled from "styled-components";
+
+const Entry = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  grid-column-gap: 1rem;
+  margin-bottom: 1rem;
+  grid-area: "entry";
+  border-bottom: 1px dotted #00000033;
+  a {
+    color: #007eb6;
+    text-decoration: none;
+  }
+  h3 + p {
+    margin-top: 0;
+  }
+  img {
+  }
+`;
+
+const Story = (props) => {
+  return (
+    <Entry>
+      <img
+        src={
+          props.story.multimedia
+            ? props.story.multimedia[1].url
+            : "/img/no-image.png"
+        }
+        alt="images"
+      />
+      <div>
+        <h3>
+          <a href={props.story.short_url} alt={props.story.title}>
+            {props.story.title}
+          </a>
+        </h3>
+        <p>{props.story.abstract}</p>
+      </div>
+    </Entry>
+  );
+};
+
+export default Story;
+```
+
+To make things interesting we are going to add a link around the entire component to make the whole entry clickable.
+
+```js
+import React from "react";
+import styled from "styled-components";
+
+const Wrapper = styled.a`
+  text-decoration: none;
+  border-bottom: 1px dotted #00000033;
+`;
+
+const Entry = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-column-gap: 1rem;
+  margin-bottom: 1rem;
+  grid-area: "entry";
+`;
+
+const StoryTitle = styled.h3`
+  color: #007eb6;
+  text-decoration: none;
+`;
+
+const StoryImg = styled.img`
+  width: 100%;
+`;
+
+const StoryPara = styled.p`
+  margin-top: 0;
+  color: #111;
+`;
+
+const Story = (props) => {
+  return (
+    <Wrapper href={props.story.short_url} alt={props.story.title}>
+      <Entry>
+        <StoryImg
+          src={
+            props.story.multimedia
+              ? props.story.multimedia[2].url
+              : "/img/no-image.png"
+          }
+          alt="images"
+        />
+        <div>
+          <StoryTitle>{props.story.title}</StoryTitle>
+
+          <StoryPara>{props.story.abstract}</StoryPara>
+        </div>
+      </Entry>
+    </Wrapper>
+  );
+};
+
+export default Story;
+```
+
+## Project Structure
+
+Create a story directory in components and move Story.js into it.
+
+Create a separate styles.js file in the directory and move the styled components into it:
+
+```js
+import styled from "styled-components";
+
+export const Wrapper = styled.a`
+  text-decoration: none;
+  border-bottom: 1px dotted #00000033;
+`;
+
+export const Entry = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-column-gap: 1rem;
+  margin-bottom: 1rem;
+  grid-area: "entry";
+`;
+
+export const StoryTitle = styled.h3`
+  color: #007eb6;
+  text-decoration: none;
+`;
+
+export const StoryImg = styled.img`
+  width: 100%;
+`;
+
+export const StoryPara = styled.p`
+  margin-top: 0;
+  color: #111;
+`;
+```
+
+Import the named exports into the Story component and destructure the props:
+
+```js
+import React from "react";
+import { Wrapper, Entry, StoryImg, StoryTitle, StoryPara } from "./styles";
+
+const Story = ({ story: { short_url, multimedia, title, abstract } }) => {
+  return (
+    <Wrapper href={short_url}>
+      <Entry>
+        <StoryImg
+          src={multimedia ? multimedia[2].url : "/img/no-image.png"}
+          alt="images"
+        />
+        <div>
+          <StoryTitle>{title}</StoryTitle>
+
+          <StoryPara>{abstract}</StoryPara>
+        </div>
+      </Entry>
+    </Wrapper>
+  );
+};
+
+export default Story;
+```
+
+Rename Story.js to index.js and check the import statement in Stories.js:
+
+```js
+import Story from "./story";
+```
+
+Stories:
+
+```js
+import React from "react";
+import Story from "../story";
+
+import { Wrapper, PageHeader } from "./styles";
+
+const Stories = ({ section, stories }) => {
+  return (
+    <Wrapper>
+      <PageHeader>{section}</PageHeader>
+      {stories.map((story, index) => (
+        <Story key={index} story={story} />
+      ))}
+    </Wrapper>
+  );
+};
+
+export default Stories;
+```
+
+styles.js:
+
+```js
+import styled from "styled-components";
+
+export const Wrapper = styled.div`
+  width: 94vw;
+  max-width: 960px;
+  margin: 24px auto;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
+
+  display: grid;
+  grid-template-columns: repeat(1fr 1fr);
+  grid-template-rows: repeat(1fr 1fr);
+  grid-gap: 1rem;
+  grid-template-areas:
+    "sectionhead sectionhead"
+    "entry entry";
+`;
+
+export const PageHeader = styled.h2`
+  font-family: Lobster;
+  color: var(--blue);
+  font-size: 2.5rem;
+  text-transform: capitalize;
+  padding-bottom: 0.25rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #007eb677;
+  grid-area: sectionhead;
+`;
 ```
 
 ## Instructor Notes
