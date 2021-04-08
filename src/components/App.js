@@ -14,15 +14,15 @@ function App() {
   const [loading, setLoading] = React.useState(false);
   const [section, setSection] = React.useState("arts");
 
-  React.useEffect(() => {
-    const url = new URL(window.location.href);
-    const hash = url.hash.slice(1);
-    if (hash !== "undefined") {
-      setSection(hash);
-    } else {
-      setSection("arts");
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   const url = new URL(window.location.href);
+  //   const hash = url.hash.slice(1);
+  //   if (hash !== "undefined") {
+  //     setSection(hash);
+  //   } else {
+  //     setSection("arts");
+  //   }
+  // }, []);
 
   React.useEffect(() => {
     setLoading(true);
