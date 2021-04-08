@@ -67,8 +67,6 @@ And displays this [SVG file](https://codepen.io/aurer/pen/jEGbA) while loading i
 
 ## Exercise
 
-## Exercise
-
 In the first session we created a [single page app](http://oit2.scps.nyu.edu/~devereld/intermediate/session1/) using vanilla js. In this class we will use React.
 
 The [final result](http://oit2.scps.nyu.edu/~devereld/intermediate/all-the-news-react/) will behave a bit differently. Instead of scrolling to different sections, it will load new data when the user navigates.
@@ -361,7 +359,9 @@ export default App;
 
 ## useEffect
 
-The Effect Hook lets you perform side effects in function components. By using this Hook, you tell React that your component needs to do something after it renders. By default, it runs both after the first render and after every update but we'll be customizing it to run only when the section (arts,,, music etc.) changes. For now, we are only using one section - arts.
+In computer science, a function or expression is said to have a side effect if it modifies some state outside its scope or has an observable interaction with its calling functions or the outside world besides returning a value. An effect is anything outside your application and includes things like cookies and fetching API data.
+
+The useEffect Hook lets you perform side effects in function components. By using this Hook, you tell React that your component needs to do something after it renders. By default, it runs both after the first render and after every update but we'll be customizing it to run only when the section (arts,,, music etc.) changes. For now, we are only using one section - arts.
 
 ```js
 React.useEffect(callbackFunction, []);
@@ -954,6 +954,32 @@ function App() {
 }
 
 export default App;
+```
+
+## URL Parameters
+
+A better method might be to use the URL hashes in the browser's location. Cookies are set on the user's browser, but what would happen if our user copied the url from the browser and sent it to another person? (Answer: the default "arts" section would be displayed. Not good.)
+
+First, [get the URL](https://gomakethings.com/getting-values-from-a-url-with-vanilla-js/) and convert the URL string into a URL object using the new URL() constructor.
+
+```js
+const url = new URL(window.location.href);
+const hash = url.hash.slice(1);
+```
+
+Do this within a `useEffect` hook in App.js:
+
+```js
+React.useEffect(() => {
+  const url = new URL(window.location.href);
+  const hash = url.hash.slice(1);
+  if (hash !== "undefined") {
+    console.log(" hash ", hash);
+    setSection(hash);
+  } else {
+    setSection("arts");
+  }
+}, []);
 ```
 
 ## Styled Components
