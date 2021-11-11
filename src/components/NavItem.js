@@ -1,13 +1,15 @@
 import React from "react";
 
 const NavItem = (props) => {
-    const sendSection = (section) =>{
+    const updateSection = (section) =>{
         props.setSection(section);
     };
 
   return (
     <li>
-      <a href={`#${props.navItem}`} onClick={() => sendSection(props.navItem)}>
+      <a
+      className={props.navItem === props.section ? "active" : ""}
+      href={`#${props.navItem}`} onClick={() => updateSection(props.navItem)}>
         {props.navItem}
       </a>
     </li>
