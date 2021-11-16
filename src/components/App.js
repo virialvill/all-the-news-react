@@ -16,9 +16,9 @@ function App() {
     const url = new URL(window.location.href);
     const hash = url.hash.slice(1);
     if (hash !== "undefined") {
-      console.log(" hash ", hash);
-      setSection(hash);
-    } else {
+    //   console.log(" hash ", hash);
+    //   setSection(hash);
+    // } else {
       setSection("arts");
     }
   }, []);
