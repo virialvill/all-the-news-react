@@ -38,7 +38,7 @@ html {
 
 header {
   height: 320px;
-  background: url(../img/img.jpg) center no-repeat;
+  background: url(../img/elena-baidak.jpeg) center no-repeat;
   background-size: cover;
   display: flex;
   align-items: center;
@@ -68,7 +68,7 @@ h1 {
 }
 
 nav {
-  background: #007eb6;
+  background: #B38993;
   width: 100%;
   transition: all 0.5s;
   position: sticky;
@@ -99,7 +99,7 @@ nav a.active {
 nav a:not(.active):hover {
   box-shadow: inset 0 0 0 2px white;
   border-radius: 6px;
-  background-color: #00aeef;
+  background-color: #BFBFBF;
 }
 
 img {
@@ -124,7 +124,7 @@ li.logo img {
 }
 
 .entry a {
-  color: #007eb6;
+  color: #BFBFBF;
   text-decoration: none;
 }
 
@@ -134,12 +134,12 @@ li.logo img {
 
 .section-head {
   font-family: Lobster;
-  color: #007eb6;
+  color: #A6937C;
   font-size: 2.5rem;
   text-transform: capitalize;
   padding-bottom: 0.25rem;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #007eb677;
+  border-bottom: 2px solid #A6937C;
   grid-area: sectionhead;
 }
 

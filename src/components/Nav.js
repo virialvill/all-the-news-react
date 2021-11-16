@@ -1,11 +1,13 @@
 import React from "react";
 import NavItem from "./NavItem";
 
-const Nav = (props) => {
+const Nav = ( { setSection, section, navItems }) => {
+  
   const svgStyles = {
     fill: "white",
   };
     return (
+      
         <nav>
           <ul>
           <li className="logo">
@@ -19,12 +21,13 @@ const Nav = (props) => {
           </a>
         </li>
 
-            {props.navItems.map((navItem, index) => (
+            { navItems.map((navItem, index) => (
+            
               <NavItem
                 key={index}
                 navItem={navItem}
-                setSection={props.setSection}
-                section={props.section}
+                setSection={setSection}
+                section={section}
           />
             ))}
           </ul>

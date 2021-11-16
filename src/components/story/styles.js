@@ -14,7 +14,7 @@ export const Entry = styled.section`
 `;
 
 export const StoryTitle = styled.h3`
-  color: #007eb6;
+  color: #A6937C;
   text-decoration: none;
 `;
 
@@ -24,5 +24,5 @@ export const StoryImg = styled.img`
 
 export const StoryPara = styled.p`
   margin-top: 0;
-  color: #111;
+  color: #BFBFBF;
 `;
