@@ -1,5 +1,6 @@
 import React from "react";
-import NavItem from "./NavItem";
+import NavItem from "../NavItem";
+import { NavPrincipal } from "./styles";
 
 const Nav = ( { setSection, section, navItems }) => {
   
@@ -7,7 +8,7 @@ const Nav = ( { setSection, section, navItems }) => {
     fill: "white",
   };
     return (
-      
+        <NavPrincipal>
         <nav>
           <ul>
           <li className="logo">
@@ -32,6 +33,7 @@ const Nav = ( { setSection, section, navItems }) => {
             ))}
           </ul>
         </nav>
+        </NavPrincipal>
       );
     };
 

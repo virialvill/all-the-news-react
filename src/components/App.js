@@ -1,10 +1,11 @@
 import React from "react";
-import Header from "./Header";
-import Nav from "./Nav";
+import Header from "./header/Header";
+import Nav from "./nav/Nav";
 import Stories from "./Stories";
 
+
 const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
-const nytapi = "FKe4HjH0sW85kLawj6MZzMuILVGujf9p";
+const nytapi = 'UjxnPN22vQs4lHk1cblajAhMuZNHDnev';
 
 function App() {
   const [stories, setStories] = React.useState([]);

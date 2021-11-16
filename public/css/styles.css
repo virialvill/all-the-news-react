@@ -36,25 +36,13 @@ html {
     "entry entry";
 }
 
-header {
-  height: 320px;
-  background: url(../img/elena-baidak.jpeg) center no-repeat;
-  background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 h1 {
   font-family: "Lobster", cursive;
   font-weight: normal;
 }
 
-@media (max-width: 640px) {
-  header {
-    height: 120px;
-  }
-}
+
 
 p {
   margin: 1rem 0;
@@ -67,44 +55,7 @@ h1 {
   text-shadow: 3px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
-nav {
-  background: #B38993;
-  width: 100%;
-  transition: all 0.5s;
-  position: sticky;
-  top: 0;
-}
 
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-nav a {
-  text-decoration: none;
-  display: inline-block;
-  color: white;
-  text-transform: capitalize;
-  font-weight: 700;
-  padding: 0.75rem 1.5rem;
-}
-
-nav a.active {
-  box-shadow: inset 0 0 0 2px white;
-  border-radius: 6px;
-}
-
-nav a:not(.active):hover {
-  box-shadow: inset 0 0 0 2px white;
-  border-radius: 6px;
-  background-color: #BFBFBF;
-}
-
-img {
-  width: 100%;
-}
 
 li.logo {
   overflow: hidden;
@@ -143,20 +94,3 @@ li.logo img {
   grid-area: sectionhead;
 }
 
-.loading {
-  position: absolute;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loading div {
-  width: 90px;
-  height: 90px;
-  overflow: hidden;
-  background: url("../img/spinner.svg") 50% 50% no-repeat;
-  background-size: cover;
-}
