@@ -4,7 +4,7 @@ import Nav from "./Nav";
 import Stories from "./Stories";
 
 const navItems = ["arts", "books", "fashion", "food", "movies", "travel"];
-const nytapi = "RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R";
+const nytapi = "rWiZs2UHoaybUAIp5wiCM3G4zCTGcjH1";
 
 function App() {
   const [stories, setStories] = React.useState([]);
@@ -37,15 +37,13 @@ function App() {
 
   return (
     <>
-      {/* <Header siteTitle="All the news the Fits We Print" />
-
+      <Header siteTitle="All the News that Fits We Print" />
       <Nav navItems={navItems} setSection={setSection} section={section} />
-
       {loading || stories.length === 0 ? (
         <h2>Loading...</h2>
       ) : (
         <Stories stories={stories} section={section} />
-      )} */}
+      )}
     </>
   );
 }
